@@ -22,7 +22,7 @@ async def lifespan(_app: fastapi.FastAPI):
 
 app = fastapi.FastAPI(
     title="Transcript Analysis API",
-    description="Analyzes conversation transcripts using an LLM and returns summaries with action items.",
+    description="Welcome 🤗! This API lets you analyze conversation transcripts using an LLM and returns summaries with action items. All endpoints require Basic Auth.",
     version="1.0.0",
     lifespan=lifespan,
     dependencies=[fastapi.Depends(verify_credentials)],
