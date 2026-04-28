@@ -1,4 +1,5 @@
 import asyncio
+import logging
 import uuid
 
 import openai
@@ -7,6 +8,8 @@ import pydantic
 from app import ports, prompts
 from app.server.models import AnalysisRecord, LLMResponse
 from app.server.storage import InMemoryStorage
+
+logger = logging.getLogger(__name__)
 
 
 class RateLimitException(Exception):
@@ -34,8 +37,10 @@ class AnalysisService:
                 dto=LLMResponse,
             )
         except openai.RateLimitError as e:
+            logger.error("OpenAI rate limit exceeded: %s", e)
             raise RateLimitException(str(e)) from e
         except (openai.APIConnectionError, openai.APITimeoutError) as e:
+            logger.error("OpenAI service unreachable: %s", e)
             raise ServiceUnavailableException(str(e)) from e
 
     def analyze(self, transcript: str) -> AnalysisRecord:

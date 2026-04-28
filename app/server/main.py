@@ -1,4 +1,5 @@
 import contextlib
+import logging
 import uuid
 
 import fastapi
@@ -7,9 +8,12 @@ from app.server import dependencies
 from app.server import models
 from app.server.service import RateLimitException, ServiceUnavailableException
 
+logger = logging.getLogger(__name__)
+
 
 @contextlib.asynccontextmanager
 async def lifespan(_app: fastapi.FastAPI):
+    logging.basicConfig(level=logging.INFO)
     dependencies.get_configs()
     dependencies.get_llm_adapter()
     yield
@@ -25,8 +29,9 @@ app = fastapi.FastAPI(
 
 @app.exception_handler(RateLimitException)
 async def rate_limit_handler(
-    _request: fastapi.Request, _exc: RateLimitException
+    _request: fastapi.Request, exc: RateLimitException
 ) -> fastapi.Response:
+    logger.error("Rate limit hit: %s", exc)
     return fastapi.responses.JSONResponse(
         status_code=429,
         content={"detail": "OpenAI rate limit reached, please retry later"},
@@ -35,8 +40,9 @@ async def rate_limit_handler(
 
 @app.exception_handler(ServiceUnavailableException)
 async def service_unavailable_handler(
-    _request: fastapi.Request, _exc: ServiceUnavailableException
+    _request: fastapi.Request, exc: ServiceUnavailableException
 ) -> fastapi.Response:
+    logger.error("LLM service unavailable: %s", exc)
     return fastapi.responses.JSONResponse(
         status_code=503,
         content={"detail": "LLM service unreachable"},
