@@ -6,6 +6,7 @@ import fastapi
 
 from app.server import dependencies
 from app.server import models
+from app.server.dependencies import verify_credentials
 from app.server.service import RateLimitException, ServiceUnavailableException
 
 logger = logging.getLogger(__name__)
@@ -24,6 +25,7 @@ app = fastapi.FastAPI(
     description="Analyzes conversation transcripts using an LLM and returns summaries with action items.",
     version="1.0.0",
     lifespan=lifespan,
+    dependencies=[fastapi.Depends(verify_credentials)],
 )
 
 
