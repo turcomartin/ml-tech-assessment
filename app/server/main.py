@@ -25,7 +25,10 @@ app = fastapi.FastAPI(
     description="""
     Welcome 🤗! This API lets you analyze conversation transcripts using an LLM and returns summaries with action items. All endpoints require Basic Auth.
     
-    This app is hosted via Cloud Run from Google Cloud Platform, and the LLM is accessed through a secure API key stored in Secret Manager. The analysis results are stored in memory for simplicity, but you can easily swap this out for a database if needed.""",
+    This app is hosted via Cloud Run from Google Cloud Platform, and the LLM is accessed through a secure API key stored in Secret Manager. The analysis results are stored in memory for simplicity, but you can easily swap this out for a database if needed.
+    
+    by Martin Turco 😉
+    """,
     version="1.0.0",
     lifespan=lifespan,
     dependencies=[fastapi.Depends(verify_credentials)],
