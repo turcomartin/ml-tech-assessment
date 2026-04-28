@@ -1,0 +1,13 @@
+# Local development environment variables.
+# Copy this file to .env and fill in the values.
+#
+# In a cloud environment these values should be sourced from a secrets manager
+# (e.g. AWS Secrets Manager, GCP Secret Manager, Azure Key Vault) — never
+# committed or stored in plain text.
+
+# --- OpenAI ---
+OPENAI_API_KEY=sk-...
+OPENAI_MODEL=gpt-4o-2024-08-06   # optional, this is the default
+
+# --- LLM mock (set to true to skip real API calls during local dev/testing) ---
+MOCK_LLM=false
